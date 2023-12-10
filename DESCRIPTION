@@ -1,0 +1,17 @@
+Package: SA23204163
+Type: Package
+Title: TLMMA
+Version: 1.0
+Date: 2023-11-27
+Author: Fen Jiang
+Maintainer:  Fen Jiang <2496907093@qq.com>
+Description: TLMMA is a method to improve the estimation of target model by using multi-source domain samples under the background of transfer learning. The TLMMA package is used to implement the TLMMA algorithm. The gdata function is used to generate the corresponding parameters, the TLMMA function is used to give the corresponding weight estimations, parameter estimations and MSE, PMSE results. The plotwto1 function provides the graph to verify the weight consistency. The plotwto2 function gives MSE and PMSE of TLMMA when the number of potential auxiliary models increases.
+License: GPL (>= 2)
+Imports: Rcpp, stats, bootstrap, DAAG, quadprog, mvtnorm, coda, boot, glmnet, microbenchmark, graphics
+Suggests: knitr, rmarkdown
+LinkingTo: Rcpp
+RoxygenNote: 7.2.3
+Encoding: UTF-8
+VignetteBuilder: knitr
+URL: http://github.com/Fenjiang03/SA23204163
+BugReports: http://github.com/Fenjiang03/SA23204163/issues
