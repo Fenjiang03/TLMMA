@@ -1,0 +1,173 @@
+---
+title: "Documentation-TLMMA"
+author: "Fen Jiang"
+date: "2023-11-27"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{This is an introduction to TLMMA packages}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The TLMMA package is used to implement the TLMMA algorithm. To be specific, the gdata function is used to generate the corresponding parameters. The TLMMA function is used to give the corresponding weight estimation, parameter estimation and MSE, PMSE results. The plotwto1 function provides the graph to verify the weight consistency. The plotwto2 function gives the changes of MSE and PMSE when the number of potential auxiliary models of TLMMA increases. In the following sections, we will describe the role of these functions in detail.
+
+# Function TLMMA
+
+TLMMA is a method to improve the estimation of target model by using multi-source domain samples under the background of transfer learning. We choose the target model and $M$ source models as candidate models, and consider the linear structure: The Sample $\left (\boldsymbol{x}_{i}^{(k)},y_{i}^{(k)}\right)$ generation comes as follows:
+$$
+y_{i}^{(k)}=\left ( \boldsymbol{x_{i}}^{(k)}\right )^{\top} \boldsymbol{\beta}^{(k)} +e_{i}^{(k)},\quad k=0,\dots,M, \quad i=1,\dots,n_{k},
+$$
+where $e_{i}^{(k)}$is an independent random disturbance term, and meet $\mathbb{E}\left ( e_{i}^{(k)}\right )=0$, $\mathbb{var}\left ( e_{i}^{(k)}\right )=\sigma_{k}^2$, $k=0,1,\dots,M$, $i=1,\dots,n_{k}$. 
+
+The method TLMMA weights the least square estimators of these candidate models and uses the Mallows criterion to select the optimal weights. To be specific, we construct the model average estimate of $\boldsymbol{\beta}^{(0)}$ as $\widehat{\boldsymbol{\beta}}(\boldsymbol{\omega})$, where $\boldsymbol{\omega}=(\omega_0,\omega_1,\dots,\omega_M)^{\top}$ is weight vector in weight space $H_M=\left\{ \boldsymbol{\omega}\in [0,1]^{M+1}:{\textstyle \sum_{k=0}^{M}}\omega_k=1 \right\}$. In order to obtain a suitable weight estimation, we propose a weight selection criterion of Mallows type(TLMMA) as follows, through minimization
+
+$$
+C(\boldsymbol{\omega})=\|\boldsymbol{y}^{(0)}-\boldsymbol{X}^{(0)}\widehat{\boldsymbol{\beta}}(\boldsymbol{\omega})\|^2+2\omega_0\sigma _0^2p
+$$
+to get the optimal weight estimator $\widehat{\boldsymbol{\omega}}$ and the average prediction of the model $\widehat{\boldsymbol{\beta}}(\widehat{\boldsymbol{\omega}})$. Criterion $C(\boldsymbol{\omega})$ can be written as a quadratic function about $\boldsymbol{\omega}$. The TLMMA function can obtain the corresponding parameter estimates $\widehat{\boldsymbol{\beta}}(\boldsymbol{\omega})$, mean square estimation error(MSE) and mean square prediction error(PMSE) by solving the optimal weights.
+
+## How to use function TLMMA
+
+param h: Measure the degree of similarity between the source model and the target model parameters in set A
+
+param p: Parameter dimension
+
+param s: The The number of non-zero elements in the parameter
+
+param n0: The sample size of target model
+
+param nk: The sample size of source models
+
+param M: The The number of source models
+
+param sigbeta: One of the initialization values of the parameter
+
+param sigx: The covariance matrix of X
+
+param key: 1 or 2 represents different data settings
+
+return MSE pMSE weight betahat
+
+
+For example:
+
+p=20;  h=2; s=11;  n0=100;  nk=50;  M=10;  sigbeta=0.4; sigx=diag(1,p); key=1;
+
+TLMMA(h,p,s,n0,nk,M,sigbeta,sigx,key)
+
+# Function gdata
+
+The gdata function, written in rcpp, generates both target model and source model parameters. Target model parameter is $\boldsymbol{\beta}^{(0)}=(sigbeta\cdot\boldsymbol{1}_{s}^{\top},\boldsymbol{0}_{p-s}^{\top})^{\top}$. In order to characterize the differences between the parameters of different models, we consider the following information set $\mathcal{A}$ composed of source models
+$$
+\mathcal{A}=\left \{ k: \|\boldsymbol{\beta}^{(0)}-\boldsymbol{\beta}^{(k)}\|_1\le h, \quad k=1,2, \dots, M \right \},
+$$
+it can be seen from the definition that the smaller $h$ is, the better the migration effect of the source model in information set $\mathcal{A}$ is. 
+
+This function has two options. When $key=1$, we generate the parameters used to calculate the TLMMA method in the following settings. When $key=2$, we generate parameters in another way to verify the weight consistency. So let's start with the case when $key=1$.
+
+Let $\mathcal{H}_k=\left\{ 1,\dots,p/5 \right\}$, so for a given set $\mathcal{A}$ and $k=1,\dots,M$, $j=1,2,\dots,p$, when $j \in \mathcal{H}_k$, if $k \in \mathcal{A}$, then 
+$$
+\beta_j^{(k)}=\beta_j^{(0)}-\delta_j^{(k)},\quad \delta_j^{(k)} \sim _{i.i.d.}N(0,h/(p/5)),
+$$
+if $k \notin \mathcal{A}$, then
+$$
+\beta_j^{(k)}=\beta_j^{(0)}-\delta_j^{(k)},\quad \delta_j^{(k)} \sim _{i.i.d.}N(0,2s/(p/5)),
+$$
+when $j \notin \mathcal{H}_k$, $\delta_j^{(k)}=0$, $\beta_j^{(k)}=\beta_j^{(0)}$. For $k=0,1,\dots,M$, $i=1,2,\dots,n_k$, $\boldsymbol{x}_i^{(k)}$ is independent of each other and generated from a normal distribution $N_p(\boldsymbol{0}_p,\boldsymbol{\Sigma}^{(k)})$, ($\boldsymbol{\Sigma}^{(k)}=sigx$), random disturbance term $e_i^{(k)}$is independent of each other and generated from a normal distribution $N(0,1)$.
+
+When $key=2$, we generate the parameters as follows: for $j=1,2,\dots,p$, the first $2M/3$ source models are generated as follows:
+$$
+\beta_j^{(k)}=\beta_j^{(0)}-\delta_j^{(k)},\quad \delta_j^{(k)} \sim _{i.i.d.}N(0,\frac{1}{n_k}),
+$$
+
+the last $M/3$ source models are generated as follows:
+$$
+\beta_j^{(k)}=\beta_j^{(0)}+sigbeta/2 \times \boldsymbol{1}_p-\delta_j^{(k)},\quad \delta_j^{(k)} \sim _{i.i.d.}N(0,\frac{1}{n_k}).
+$$
+
+## How to use function gdata
+
+param h: Measure the degree of similarity between the source model and the target model parameters in set A
+
+param p: Parameter dimension
+
+param s: The number of non-zero elements in the parameter
+
+param M: The number of source models
+
+param sigbeta: One of the initialization values of the parameter
+
+param key: 1 or 2 represents different data settings
+
+param sizeA0: Number of source models in set A
+
+param nk: The sample size of source models
+
+return B: Generated parameters of target model and source models 
+
+
+For example:
+
+h=2; p=20; s=11; M=10; sigbeta=0.4; key=1;  sizeA0=4; nk=50;
+
+B <- gdata(h,p,s,M,sigbeta,key,sizeA0,nk)
+
+
+# Function plotwto1
+
+Function "plotwto1" is to verify the weight consistency of TLMMA by calculating the sum of weights of potential auxiliary models under different sample size $\{100,800,1000,5000,10000,20000,50000\}$. You can get a figure, in general, the sum of weights tend to 1 as the sample size increases.
+
+## How to use function plotwto1
+
+param: h Measure the degree of similarity between the source model and the target model parameters in set A
+
+param: p Parameter dimension
+
+param: s The The number of non-zero elements in the parameter
+
+param: M The The number of source models
+
+param: sigbeta One of the initialization values of the parameter
+
+param: sigx The covariance matrix of X
+
+return A graph about the trend of the sum of weights of potential auxiliary models as the sample size increases
+
+For example:
+
+h=2;p=20;s=14;M=10;sigbeta=0.4;sigx=diag(1,p);
+
+plotwto1(h,p,s,M,sigbeta,sigx)
+
+# Function plotwto2
+
+The purpose of the function "plotwto2" is to observe the trend of MSE and PMSE as the number of source models in information set $\mathcal{A}$ increases. Intuitively speaking, the source model of information set $\mathcal{A}$ is closer to the target model, which should have a better transfer effect. Therefore, generally speaking, MSE and pMSE will decrease with the increase of the number of source models in information set $\mathcal{A}$.
+
+## How to use function plotwto2
+
+param: h Measure the degree of similarity between the source model and the target model parameters in set A
+
+param: p Parameter dimension
+
+param: s The The number of non-zero elements in the parameter
+
+param: n0 The sample size of target model
+
+param: nk The sample size of source models
+
+param: M The The number of source models
+
+param: sigbeta One of the initialization values of the parameter
+
+param: sigx The covariance matrix of X
+
+param: key 1=Calculation method result 2=Verify relevant theories
+
+return A graph about MSE and PMSE of the TLMMA method
+
+
+For example:
+
+h=6;p=20;s=11;n0=100;nk=100;M=20;sigbeta=0.3;sigx=diag(1,p);key=1;
+
+plotwto2(h,p,s,n0,nk,M,sigbeta,sigx,key)

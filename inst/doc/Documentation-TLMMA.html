@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Fen Jiang" />
+
+<meta name="date" content="2023-11-27" />
+
+<title>Documentation-TLMMA</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Documentation-TLMMA</h1>
+<h4 class="author">Fen Jiang</h4>
+<h4 class="date">2023-11-27</h4>
+
+
+
+<p>The TLMMA package is used to implement the TLMMA algorithm. To be
+specific, the gdata function is used to generate the corresponding
+parameters. The TLMMA function is used to give the corresponding weight
+estimation, parameter estimation and MSE, PMSE results. The plotwto1
+function provides the graph to verify the weight consistency. The
+plotwto2 function gives the changes of MSE and PMSE when the number of
+potential auxiliary models of TLMMA increases. In the following
+sections, we will describe the role of these functions in detail.</p>
+<div id="function-tlmma" class="section level1">
+<h1>Function TLMMA</h1>
+<p>TLMMA is a method to improve the estimation of target model by using
+multi-source domain samples under the background of transfer learning.
+We choose the target model and <span class="math inline">\(M\)</span>
+source models as candidate models, and consider the linear structure:
+The Sample <span class="math inline">\(\left
+(\boldsymbol{x}_{i}^{(k)},y_{i}^{(k)}\right)\)</span> generation comes
+as follows: <span class="math display">\[
+y_{i}^{(k)}=\left ( \boldsymbol{x_{i}}^{(k)}\right )^{\top}
+\boldsymbol{\beta}^{(k)} +e_{i}^{(k)},\quad k=0,\dots,M, \quad
+i=1,\dots,n_{k},
+\]</span> where <span class="math inline">\(e_{i}^{(k)}\)</span>is an
+independent random disturbance term, and meet <span class="math inline">\(\mathbb{E}\left ( e_{i}^{(k)}\right )=0\)</span>,
+<span class="math inline">\(\mathbb{var}\left ( e_{i}^{(k)}\right
+)=\sigma_{k}^2\)</span>, <span class="math inline">\(k=0,1,\dots,M\)</span>, <span class="math inline">\(i=1,\dots,n_{k}\)</span>.</p>
+<p>The method TLMMA weights the least square estimators of these
+candidate models and uses the Mallows criterion to select the optimal
+weights. To be specific, we construct the model average estimate of
+<span class="math inline">\(\boldsymbol{\beta}^{(0)}\)</span> as <span class="math inline">\(\widehat{\boldsymbol{\beta}}(\boldsymbol{\omega})\)</span>,
+where <span class="math inline">\(\boldsymbol{\omega}=(\omega_0,\omega_1,\dots,\omega_M)^{\top}\)</span>
+is weight vector in weight space <span class="math inline">\(H_M=\left\{
+\boldsymbol{\omega}\in [0,1]^{M+1}:{\textstyle \sum_{k=0}^{M}}\omega_k=1
+\right\}\)</span>. In order to obtain a suitable weight estimation, we
+propose a weight selection criterion of Mallows type(TLMMA) as follows,
+through minimization</p>
+<p><span class="math display">\[
+C(\boldsymbol{\omega})=\|\boldsymbol{y}^{(0)}-\boldsymbol{X}^{(0)}\widehat{\boldsymbol{\beta}}(\boldsymbol{\omega})\|^2+2\omega_0\sigma
+_0^2p
+\]</span> to get the optimal weight estimator <span class="math inline">\(\widehat{\boldsymbol{\omega}}\)</span> and the
+average prediction of the model <span class="math inline">\(\widehat{\boldsymbol{\beta}}(\widehat{\boldsymbol{\omega}})\)</span>.
+Criterion <span class="math inline">\(C(\boldsymbol{\omega})\)</span>
+can be written as a quadratic function about <span class="math inline">\(\boldsymbol{\omega}\)</span>. The TLMMA function
+can obtain the corresponding parameter estimates <span class="math inline">\(\widehat{\boldsymbol{\beta}}(\boldsymbol{\omega})\)</span>,
+mean square estimation error(MSE) and mean square prediction error(PMSE)
+by solving the optimal weights.</p>
+<div id="how-to-use-function-tlmma" class="section level2">
+<h2>How to use function TLMMA</h2>
+<p>param h: Measure the degree of similarity between the source model
+and the target model parameters in set A</p>
+<p>param p: Parameter dimension</p>
+<p>param s: The The number of non-zero elements in the parameter</p>
+<p>param n0: The sample size of target model</p>
+<p>param nk: The sample size of source models</p>
+<p>param M: The The number of source models</p>
+<p>param sigbeta: One of the initialization values of the parameter</p>
+<p>param sigx: The covariance matrix of X</p>
+<p>param key: 1 or 2 represents different data settings</p>
+<p>return MSE pMSE weight betahat</p>
+<p>For example:</p>
+<p>p=20; h=2; s=11; n0=100; nk=50; M=10; sigbeta=0.4; sigx=diag(1,p);
+key=1;</p>
+<p>TLMMA(h,p,s,n0,nk,M,sigbeta,sigx,key)</p>
+</div>
+</div>
+<div id="function-gdata" class="section level1">
+<h1>Function gdata</h1>
+<p>The gdata function, written in rcpp, generates both target model and
+source model parameters. Target model parameter is <span class="math inline">\(\boldsymbol{\beta}^{(0)}=(sigbeta\cdot\boldsymbol{1}_{s}^{\top},\boldsymbol{0}_{p-s}^{\top})^{\top}\)</span>.
+In order to characterize the differences between the parameters of
+different models, we consider the following information set <span class="math inline">\(\mathcal{A}\)</span> composed of source models
+<span class="math display">\[
+\mathcal{A}=\left \{ k:
+\|\boldsymbol{\beta}^{(0)}-\boldsymbol{\beta}^{(k)}\|_1\le h, \quad
+k=1,2, \dots, M \right \},
+\]</span> it can be seen from the definition that the smaller <span class="math inline">\(h\)</span> is, the better the migration effect of
+the source model in information set <span class="math inline">\(\mathcal{A}\)</span> is.</p>
+<p>This function has two options. When <span class="math inline">\(key=1\)</span>, we generate the parameters used to
+calculate the TLMMA method in the following settings. When <span class="math inline">\(key=2\)</span>, we generate parameters in another
+way to verify the weight consistency. So let’s start with the case when
+<span class="math inline">\(key=1\)</span>.</p>
+<p>Let <span class="math inline">\(\mathcal{H}_k=\left\{ 1,\dots,p/5
+\right\}\)</span>, so for a given set <span class="math inline">\(\mathcal{A}\)</span> and <span class="math inline">\(k=1,\dots,M\)</span>, <span class="math inline">\(j=1,2,\dots,p\)</span>, when <span class="math inline">\(j \in \mathcal{H}_k\)</span>, if <span class="math inline">\(k \in \mathcal{A}\)</span>, then <span class="math display">\[
+\beta_j^{(k)}=\beta_j^{(0)}-\delta_j^{(k)},\quad \delta_j^{(k)} \sim
+_{i.i.d.}N(0,h/(p/5)),
+\]</span> if <span class="math inline">\(k \notin \mathcal{A}\)</span>,
+then <span class="math display">\[
+\beta_j^{(k)}=\beta_j^{(0)}-\delta_j^{(k)},\quad \delta_j^{(k)} \sim
+_{i.i.d.}N(0,2s/(p/5)),
+\]</span> when <span class="math inline">\(j \notin
+\mathcal{H}_k\)</span>, <span class="math inline">\(\delta_j^{(k)}=0\)</span>, <span class="math inline">\(\beta_j^{(k)}=\beta_j^{(0)}\)</span>. For <span class="math inline">\(k=0,1,\dots,M\)</span>, <span class="math inline">\(i=1,2,\dots,n_k\)</span>, <span class="math inline">\(\boldsymbol{x}_i^{(k)}\)</span> is independent of
+each other and generated from a normal distribution <span class="math inline">\(N_p(\boldsymbol{0}_p,\boldsymbol{\Sigma}^{(k)})\)</span>,
+(<span class="math inline">\(\boldsymbol{\Sigma}^{(k)}=sigx\)</span>),
+random disturbance term <span class="math inline">\(e_i^{(k)}\)</span>is
+independent of each other and generated from a normal distribution <span class="math inline">\(N(0,1)\)</span>.</p>
+<p>When <span class="math inline">\(key=2\)</span>, we generate the
+parameters as follows: for <span class="math inline">\(j=1,2,\dots,p\)</span>, the first <span class="math inline">\(2M/3\)</span> source models are generated as
+follows: <span class="math display">\[
+\beta_j^{(k)}=\beta_j^{(0)}-\delta_j^{(k)},\quad \delta_j^{(k)} \sim
+_{i.i.d.}N(0,\frac{1}{n_k}),
+\]</span></p>
+<p>the last <span class="math inline">\(M/3\)</span> source models are
+generated as follows: <span class="math display">\[
+\beta_j^{(k)}=\beta_j^{(0)}+sigbeta/2 \times
+\boldsymbol{1}_p-\delta_j^{(k)},\quad \delta_j^{(k)} \sim
+_{i.i.d.}N(0,\frac{1}{n_k}).
+\]</span></p>
+<div id="how-to-use-function-gdata" class="section level2">
+<h2>How to use function gdata</h2>
+<p>param h: Measure the degree of similarity between the source model
+and the target model parameters in set A</p>
+<p>param p: Parameter dimension</p>
+<p>param s: The number of non-zero elements in the parameter</p>
+<p>param M: The number of source models</p>
+<p>param sigbeta: One of the initialization values of the parameter</p>
+<p>param key: 1 or 2 represents different data settings</p>
+<p>param sizeA0: Number of source models in set A</p>
+<p>param nk: The sample size of source models</p>
+<p>return B: Generated parameters of target model and source models</p>
+<p>For example:</p>
+<p>h=2; p=20; s=11; M=10; sigbeta=0.4; key=1; sizeA0=4; nk=50;</p>
+<p>B &lt;- gdata(h,p,s,M,sigbeta,key,sizeA0,nk)</p>
+</div>
+</div>
+<div id="function-plotwto1" class="section level1">
+<h1>Function plotwto1</h1>
+<p>Function “plotwto1” is to verify the weight consistency of TLMMA by
+calculating the sum of weights of potential auxiliary models under
+different sample size <span class="math inline">\(\{100,800,1000,5000,10000,20000,50000\}\)</span>.
+You can get a figure, in general, the sum of weights tend to 1 as the
+sample size increases.</p>
+<div id="how-to-use-function-plotwto1" class="section level2">
+<h2>How to use function plotwto1</h2>
+<p>param: h Measure the degree of similarity between the source model
+and the target model parameters in set A</p>
+<p>param: p Parameter dimension</p>
+<p>param: s The The number of non-zero elements in the parameter</p>
+<p>param: M The The number of source models</p>
+<p>param: sigbeta One of the initialization values of the parameter</p>
+<p>param: sigx The covariance matrix of X</p>
+<p>return A graph about the trend of the sum of weights of potential
+auxiliary models as the sample size increases</p>
+<p>For example:</p>
+<p>h=2;p=20;s=14;M=10;sigbeta=0.4;sigx=diag(1,p);</p>
+<p>plotwto1(h,p,s,M,sigbeta,sigx)</p>
+</div>
+</div>
+<div id="function-plotwto2" class="section level1">
+<h1>Function plotwto2</h1>
+<p>The purpose of the function “plotwto2” is to observe the trend of MSE
+and PMSE as the number of source models in information set <span class="math inline">\(\mathcal{A}\)</span> increases. Intuitively
+speaking, the source model of information set <span class="math inline">\(\mathcal{A}\)</span> is closer to the target
+model, which should have a better transfer effect. Therefore, generally
+speaking, MSE and pMSE will decrease with the increase of the number of
+source models in information set <span class="math inline">\(\mathcal{A}\)</span>.</p>
+<div id="how-to-use-function-plotwto2" class="section level2">
+<h2>How to use function plotwto2</h2>
+<p>param: h Measure the degree of similarity between the source model
+and the target model parameters in set A</p>
+<p>param: p Parameter dimension</p>
+<p>param: s The The number of non-zero elements in the parameter</p>
+<p>param: n0 The sample size of target model</p>
+<p>param: nk The sample size of source models</p>
+<p>param: M The The number of source models</p>
+<p>param: sigbeta One of the initialization values of the parameter</p>
+<p>param: sigx The covariance matrix of X</p>
+<p>param: key 1=Calculation method result 2=Verify relevant theories</p>
+<p>return A graph about MSE and PMSE of the TLMMA method</p>
+<p>For example:</p>
+<p>h=6;p=20;s=11;n0=100;nk=100;M=20;sigbeta=0.3;sigx=diag(1,p);key=1;</p>
+<p>plotwto2(h,p,s,n0,nk,M,sigbeta,sigx,key)</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
