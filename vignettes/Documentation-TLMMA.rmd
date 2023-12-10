@@ -26,21 +26,33 @@ C(\boldsymbol{\omega})=\|\boldsymbol{y}^{(0)}-\boldsymbol{X}^{(0)}\widehat{\bold
 $$
 to get the optimal weight estimator $\widehat{\boldsymbol{\omega}}$ and the average prediction of the model $\widehat{\boldsymbol{\beta}}(\widehat{\boldsymbol{\omega}})$. Criterion $C(\boldsymbol{\omega})$ can be written as a quadratic function about $\boldsymbol{\omega}$. The TLMMA function can obtain the corresponding parameter estimates $\widehat{\boldsymbol{\beta}}(\boldsymbol{\omega})$, mean square estimation error(MSE) and mean square prediction error(PMSE) by solving the optimal weights.
 
-## How to use function TLMMA 
+## How to use function TLMMA
+
 param h: Measure the degree of similarity between the source model and the target model parameters in set A
+
 param p: Parameter dimension
+
 param s: The The number of non-zero elements in the parameter
+
 param n0: The sample size of target model
+
 param nk: The sample size of source models
+
 param M: The The number of source models
+
 param sigbeta: One of the initialization values of the parameter
+
 param sigx: The covariance matrix of X
+
 param key: 1 or 2 represents different data settings
+
 return MSE pMSE weight betahat
+
 
 For example:
 
 p=20;  h=2; s=11;  n0=100;  nk=50;  M=10;  sigbeta=0.4; sigx=diag(1,p); key=1;
+
 TLMMA(h,p,s,n0,nk,M,sigbeta,sigx,key)
 
 # Function gdata
@@ -74,19 +86,30 @@ $$
 $$
 
 ## How to use function gdata
+
 param h: Measure the degree of similarity between the source model and the target model parameters in set A
+
 param p: Parameter dimension
+
 param s: The number of non-zero elements in the parameter
+
 param M: The number of source models
+
 param sigbeta: One of the initialization values of the parameter
+
 param key: 1 or 2 represents different data settings
+
 param sizeA0: Number of source models in set A
+
 param nk: The sample size of source models
+
 return B: Generated parameters of target model and source models 
+
 
 For example:
 
 h=2; p=20; s=11; M=10; sigbeta=0.4; key=1;  sizeA0=4; nk=50;
+
 B <- gdata(h,p,s,M,sigbeta,key,sizeA0,nk)
 
 
@@ -95,17 +118,25 @@ B <- gdata(h,p,s,M,sigbeta,key,sizeA0,nk)
 Function "plotwto1" is to verify the weight consistency of TLMMA by calculating the sum of weights of potential auxiliary models under different sample size $\{100,800,1000,5000,10000,20000,50000\}$. You can get a figure, in general, the sum of weights tend to 1 as the sample size increases.
 
 ## How to use function plotwto1
+
 param: h Measure the degree of similarity between the source model and the target model parameters in set A
+
 param: p Parameter dimension
+
 param: s The The number of non-zero elements in the parameter
+
 param: M The The number of source models
+
 param: sigbeta One of the initialization values of the parameter
+
 param: sigx The covariance matrix of X
+
 return A graph about the trend of the sum of weights of potential auxiliary models as the sample size increases
 
 For example:
 
 h=2;p=20;s=14;M=10;sigbeta=0.4;sigx=diag(1,p);
+
 plotwto1(h,p,s,M,sigbeta,sigx)
 
 # Function plotwto2
@@ -113,18 +144,30 @@ plotwto1(h,p,s,M,sigbeta,sigx)
 The purpose of the function "plotwto2" is to observe the trend of MSE and PMSE as the number of source models in information set $\mathcal{A}$ increases. Intuitively speaking, the source model of information set $\mathcal{A}$ is closer to the target model, which should have a better transfer effect. Therefore, generally speaking, MSE and pMSE will decrease with the increase of the number of source models in information set $\mathcal{A}$.
 
 ## How to use function plotwto2
+
 param: h Measure the degree of similarity between the source model and the target model parameters in set A
+
 param: p Parameter dimension
+
 param: s The The number of non-zero elements in the parameter
+
 param: n0 The sample size of target model
+
 param: nk The sample size of source models
+
 param: M The The number of source models
+
 param: sigbeta One of the initialization values of the parameter
+
 param: sigx The covariance matrix of X
+
 param: key 1=Calculation method result 2=Verify relevant theories
+
 return A graph about MSE and PMSE of the TLMMA method
+
 
 For example:
 
 h=6;p=20;s=11;n0=100;nk=100;M=20;sigbeta=0.3;sigx=diag(1,p);key=1;
+
 plotwto2(h,p,s,n0,nk,M,sigbeta,sigx,key)
